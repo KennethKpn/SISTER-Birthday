@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { TiltedGridHero } from './components/ui/tilted-grid-hero';
-import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, X } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, MousePointerClick, Sparkles, X } from 'lucide-react';
 
 const photos = [
   { src: '/images/jennifer-01.webp', alt: 'Jennifer assise dans un escalier éclairé, en tenue claire', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
@@ -25,6 +25,49 @@ const wishes = [
   { n: '04', title: 'Ton abondance', text: 'Que le succès financier t’accompagne, non comme une fin en soi, mais comme une liberté : celle de choisir, de construire, d’aider et de profiter dignement du fruit de tes efforts.' },
 ];
 
+
+function PartyCorners() {
+  return (
+    <div className="party-corners" aria-hidden="true">
+      {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => (
+        <span className={`party-corner party-corner--${corner}`} key={corner}>
+          <i className="party-balloon party-balloon--a" />
+          <i className="party-balloon party-balloon--b" />
+          <i className="party-balloon party-balloon--c" />
+          <b className="party-star party-star--a">✦</b>
+          <b className="party-star party-star--b">✧</b>
+          <b className="party-confetti-mark">·</b>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ConfettiBurst({ burst }: { burst: number }) {
+  if (!burst) return null;
+  return (
+    <div className="letter-confetti" key={burst} aria-hidden="true">
+      {Array.from({ length: 34 }, (_, i) => {
+        const angle = (i / 34) * Math.PI * 2;
+        const distance = 58 + ((i * 19) % 74);
+        const style = {
+          left: '50%',
+          top: '50%',
+          '--dx': `${Math.cos(angle) * distance}px`,
+          '--dy': `${Math.sin(angle) * distance - 14}px`,
+          '--spin': `${(i % 2 === 0 ? 1 : -1) * (150 + i * 17)}deg`,
+          '--delay': `${(i % 6) * 16}ms`,
+        } as CSSProperties;
+        return (
+          <span className={i % 6 === 0 ? 'burst-piece is-star' : 'burst-piece'} key={i} style={style}>
+            {i % 6 === 0 ? '✦' : ''}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function Balloons({ onLaunch }: { onLaunch: () => void }) {
   return <div className="intro-screen"><div className="intro-grain"/><div className="balloon-field" aria-hidden="true">{Array.from({length:18},(_,i)=><span key={i} className={`balloon balloon-${i%6}`} style={{left:`${(i*19+4)%100}%`,animationDelay:`${(i%7)*-.8}s`,animationDuration:`${10+(i%5)*2}s`}}/>)}</div><div className="intro-copy"><span className="eyebrow"><Sparkles size={13}/> A LITTLE SOMETHING FOR YOU</span><p className="intro-kicker">A new chapter begins</p><h1>Happy <em>23</em>,<br/>Jennifer<span>.</span></h1><p className="intro-sub">Une surprise imaginée avec amour,<br/>juste pour toi.</p><button type="button" className="pill-button light" onClick={onLaunch}>Ouvrir ma surprise <ArrowUpRight size={16}/></button><span className="intro-foot">03 · 11 · 2026 <i/> MADE WITH LOVE</span></div><div className="intro-side">SCROLL INTO YOUR DAY · 23 YEARS OF YOU</div></div>;
 }
@@ -37,6 +80,7 @@ export default function App() {
   const [sealed,setSealed] = useState(false);
   const [typed,setTyped] = useState(false);
   const [visibleChars,setVisibleChars] = useState(0);
+  const [celebration,setCelebration] = useState(0);
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;
@@ -65,6 +109,7 @@ export default function App() {
   return <main className="site-shell">
     <nav className="top-nav" aria-label="Navigation principale"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
     <section className="poem-stage" id="poem">
+      <PartyCorners />
       <div className="poem-ceiling"><i/><i/><i/><i/></div>
       <div className="poem-wall poem-wall-left"><span>COURAGE · GRACE · LIGHT · COURAGE · GRACE · LIGHT ·</span></div>
       <div className="poem-wall poem-wall-right"><span>YOU ARE BECOMING EVERYTHING YOU DREAMED OF</span></div>
@@ -81,32 +126,38 @@ export default function App() {
       <div className="poem-caption"><p>Tu n’as pas besoin de tout savoir aujourd’hui.<br/><em>Continue simplement d’avancer.</em></p><a href="#top">ENTER HER ARCHIVE <ArrowDown size={14}/></a></div>
     </section>
     <section className="archive-hero" id="top">
+      <PartyCorners />
       <div className="hero-overline"><span>CHAPTER 23</span><span>03 NOVEMBER 2003 — FOREVER</span></div>
       <div className="portrait-stream"><TiltedGridHero images={heroImages} className="h-full w-full" speed={4.8} tileHeight={37} curve={78} axis={53} fade={9} /></div>
       <div className="hero-bottom"><h1><span>Everything</span><br/>that makes<br/><em>you, you.</em></h1><div className="hero-center-note">A life in little moments.<br/>A whole lot of reasons to celebrate.</div><p className="hero-right">23 YEARS<br/><strong>of becoming.</strong></p></div>
       <a className="scroll-cue" href="#archive"><span>DISCOVER HER STORY</span><ArrowDown size={15}/></a>
     </section>
     <section className="archive-section" id="archive">
+      <PartyCorners />
       <div className="section-heading"><span className="eyebrow">01 / THE ARCHIVE</span><p>Une collection de petits instants,<br/>et tout ce qu’ils racontent de toi.</p></div>
       <div className="floating-gallery">{photos.map((p,i)=><button type="button" key={p.label} className={`gallery-photo photo-${i+1}`} onClick={()=>setActive(i)} aria-label={`Ouvrir le portrait : ${p.label}`}><img src={p.src} alt={p.alt} loading="lazy" decoding="async"/><span className="photo-caption">{p.label} <ArrowUpRight size={13}/></span></button>)}</div>
       <div className="archive-end"><span>NOT JUST A PRETTY PICTURE.</span><span>A THOUSAND LITTLE THINGS TO LOVE.</span></div>
     </section>
     <section className="manifesto">
+      <PartyCorners />
       <span className="eyebrow">A NOTE FROM YOUR BROTHER</span>
       <h2>Strong in your own way.<br/><em>Beautiful in every way.</em></h2>
       <p>Ta force n’a pas besoin de faire du bruit. Elle se voit dans ta façon de recommencer, de rêver, de tenir bon et de continuer à avancer.</p>
       <span className="manifesto-mark">J.</span>
     </section>
     <section className="wishes-section" id="wishes">
+      <PartyCorners />
       <div className="section-heading"><span className="eyebrow">02 / THE WISH LIST</span><p>Quatre petites portes.<br/>Ouvre-les une à une.</p></div>
       <div className="wish-grid">{wishes.map((w,i)=><button key={w.n} className={`wish-card ${opened.includes(i)?'is-open':''}`} onClick={()=>reveal(i)}><span className="wish-number">{w.n}</span><span className="wish-lock">{opened.includes(i)?<Heart size={16} fill="currentColor"/>:<LockKeyhole size={16}/>}</span><span className="wish-title">{w.title}</span><span className="wish-text">{opened.includes(i)?w.text:'Un vœu que je garde pour toi…'}</span><span className="wish-action">{opened.includes(i)?'WITH LOVE':'TAP TO REVEAL'} <ArrowUpRight size={13}/></span></button>)}</div>
       {allOpened&&<p className="all-opened"><Sparkles size={15}/> Tu as ouvert tous mes vœux. Il en reste un, écrit rien que pour toi.</p>}
     </section>
     <section className="letter-section" id="letter">
-      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><button type="button" className="pill-button" onClick={()=>{setLetter(v=>!v);setSealed(false);}}>{letter?'Replier le papyrus':'Dérouler le papyrus'} <ArrowUpRight size={16}/></button></div>
-      {letter&&<div className={`parchment-wrap is-writing ${typed?'is-written':''}`}><div className="parchment"><div className="paper-top-roll"/><div className="paper-content"><span className="paper-date">À TOI, JENNIFER · EN CE 3 NOVEMBRE</span><p className="handwriting">Ma chère Jennifer,</p><p className="letter-copy">{letterParagraphs[0].slice(0,visibleChars)}{!typed&&visibleChars<letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="letter-copy">{letterParagraphs[1].slice(0,Math.max(0,visibleChars-letterParagraphs[0].length))}{!typed&&visibleChars>=letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="handwriting signature">Ton frère, Kenneth.</p><div className={`wax-seal ${sealed?'pressed':''}`}><span>J</span><small>WITH LOVE</small></div></div><div className="paper-bottom-roll"/></div><button className="seal-button" onClick={()=>setSealed(true)} disabled={sealed||!typed}>{sealed?'LE SCEAU EST APPOSÉ':'APPOSER LE SCEAU'} <Sparkles size={14}/></button></div>}
+      <PartyCorners />
+      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><div className="letter-action-row"><div className="letter-cta-wrap"><span className="letter-tap-cue"><MousePointerClick size={14}/> UN PETIT CLIC POUR UNE GRANDE SURPRISE</span><button type="button" className="pill-button letter-open-button" onClick={()=>{const next=!letter;setLetter(next);setSealed(false);if(next)setCelebration(v=>v+1);}} aria-expanded={letter} aria-controls="parchment-letter"><Sparkles size={15}/>{letter?'Replier la lettre':'Ouvrir ma lettre'} <ArrowUpRight size={16}/></button><ConfettiBurst burst={celebration}/></div><button type="button" className="letter-photo-frame" onClick={()=>setActive(6)} aria-label="Agrandir le portrait encadré de Jennifer"><img src={photos[6].src} alt={photos[6].alt} loading="lazy" decoding="async"/><span className="frame-plaque">JENNIFER · XXIII</span></button></div></div>
+      {letter&&<div id="parchment-letter" className={`parchment-wrap is-writing ${typed?'is-written':''}`} role="region" aria-label="Lettre manuscrite pour Jennifer"><div className="parchment"><div className="paper-top-roll"/><div className="paper-content"><span className="paper-date">À TOI, JENNIFER · EN CE 3 NOVEMBRE</span><p className="handwriting">Ma chère Jennifer,</p><p className="letter-copy">{letterParagraphs[0].slice(0,visibleChars)}{!typed&&visibleChars<letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="letter-copy">{letterParagraphs[1].slice(0,Math.max(0,visibleChars-letterParagraphs[0].length))}{!typed&&visibleChars>=letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="handwriting signature">Ton frère, Kenneth.</p><div className={`wax-seal ${sealed?'pressed':''}`}><span>J</span><small>WITH LOVE</small></div></div><div className="paper-bottom-roll"/></div><button className="seal-button" onClick={()=>setSealed(true)} disabled={sealed||!typed}>{sealed?'LE SCEAU EST APPOSÉ':'APPOSER LE SCEAU'} <Sparkles size={14}/></button></div>}
     </section>
-    <footer className="footer"><span className="eyebrow">END OF THIS LITTLE UNIVERSE</span><h2>Keep becoming,<br/><em>Jennifer.</em></h2><p>Le monde est plus beau avec toi dedans.</p><div className="footer-bottom"><span>MADE FOR JENNIFER · 23</span><button onClick={()=>{setEntered(false);setActive(null);setOpened([]);setLetter(false);setSealed(false);window.scrollTo({top:0,behavior:'smooth'});}}>REPLAY THE SURPRISE ↗</button><span>FROM YOUR BROTHER, WITH LOVE.</span></div></footer>
+    <footer className="footer">
+      <PartyCorners /><span className="eyebrow">END OF THIS LITTLE UNIVERSE</span><h2>Keep becoming,<br/><em>Jennifer.</em></h2><p>Le monde est plus beau avec toi dedans.</p><div className="footer-bottom"><span>MADE FOR JENNIFER · 23</span><button onClick={()=>{setEntered(false);setActive(null);setOpened([]);setLetter(false);setSealed(false);setCelebration(0);window.scrollTo({top:0,behavior:'smooth'});}}>REPLAY THE SURPRISE ↗</button><span>FROM YOUR BROTHER, WITH LOVE.</span></div></footer>
     {active!==null&&<div className="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title" tabIndex={-1} onClick={()=>setActive(null)}><button type="button" className="modal-close" aria-label="Fermer le portrait" onClick={()=>setActive(null)}><X/></button><div className="modal-image" onClick={e=>e.stopPropagation()}><img src={photos[active].src} alt={photos[active].alt} decoding="async"/><div><span className="eyebrow">A LITTLE REMINDER</span><h3 id="photo-modal-title">{photos[active].label}</h3><p>{photos[active].note}</p><button type="button" aria-label="Voir le portrait suivant" onClick={()=>setActive(((active??0)+1)%photos.length)}>NEXT PORTRAIT <ArrowUpRight size={14}/></button></div></div></div>}
   </main>;
 }
