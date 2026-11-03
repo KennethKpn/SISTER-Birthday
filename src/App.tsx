@@ -12,6 +12,7 @@ const photos = [
   { src: '/images/jennifer-07.webp', alt: 'Portrait élégant', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
   { src: '/images/jennifer-01.webp', alt: 'Portrait studio', label: 'Le renouveau', note: 'Que cette nouvelle année t’ouvre des portes inattendues.' },
 ];
+const heroImages = photos.map(({ src, alt }) => ({ src, alt }));
 
 const letterParagraphs = [
   "Je ne te le dis peut-être pas assez souvent, mais je suis reconnaissant de t’avoir dans ma vie. Je vois ta force, ta gentillesse, ton courage et cette sensibilité que tu caches parfois derrière ton caractère bien trempé. Tu es ambitieuse, pleine de ressources, drôle à ta façon et profondément attachante. Oui, tu peux être têtue, me faire lever les yeux au ciel et parfois mettre ma patience à l’épreuve… mais ce sont aussi ces petites imperfections qui font que tu es toi. Je suis fier de la personne que tu deviens, et je souhaite que tu n’oublies jamais que tu peux compter sur moi.",
@@ -35,7 +36,8 @@ export default function App() {
   const [opened,setOpened] = useState<number[]>([]);
   const [letter,setLetter] = useState(false);
   const [sealed,setSealed] = useState(false);
-  const [typed,setTyped] = useState(false);\n  const [visibleChars,setVisibleChars] = useState(0);
+  const [typed,setTyped] = useState(false);
+  const [visibleChars,setVisibleChars] = useState(0);
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;
@@ -62,7 +64,7 @@ export default function App() {
     </section>
     <section className="archive-hero" id="top">
       <div className="hero-overline"><span>CHAPTER 23</span><span>03 NOVEMBER 2003 — FOREVER</span></div>
-      <div className="portrait-stream"><TiltedGridHero images={photos.map(({src,alt})=>({src,alt}))} className="h-full w-full" speed={4.8} tileHeight={37} curve={78} axis={53} fade={9} /></div>
+      <div className="portrait-stream"><TiltedGridHero images={heroImages} className="h-full w-full" speed={4.8} tileHeight={37} curve={78} axis={53} fade={9} /></div>
       <div className="hero-bottom"><h1><span>Everything</span><br/>that makes<br/><em>you, you.</em></h1><div className="hero-center-note">A life in little moments.<br/>A whole lot of reasons to celebrate.</div><p className="hero-right">23 YEARS<br/><strong>of becoming.</strong></p></div>
       <a className="scroll-cue" href="#archive"><span>DISCOVER HER STORY</span><ArrowDown size={15}/></a>
     </section>
