@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, X } from 'lucide-react';
 
 const photos = [
   { src: '/images/jennifer-01.webp', alt: 'Portrait éditorial', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
@@ -34,14 +34,13 @@ export default function App() {
   const [letter,setLetter] = useState(false);
   const [sealed,setSealed] = useState(false);
   const [typed,setTyped] = useState(false);\n  const [visibleChars,setVisibleChars] = useState(0);
-  const [music,setMusic] = useState(false);
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;\n  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+4,totalLetterChars)),12); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);\n  useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
   const heartTiles = useMemo(()=>photos.map((p,i)=><button key={p.label} className={`archive-tile tile-${i+1}`} onClick={()=>setActive(i)} aria-label={`Découvrir ${p.label}`}><img src={p.src} alt={p.alt}/><span>{p.label}</span></button>),[]);
   if(!entered) return <Balloons onLaunch={()=>setEntered(true)}/>;
   return <main className="site-shell">
-    <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div><button className="sound-toggle" onClick={()=>setMusic(!music)} aria-label="Activer ou désactiver la musique">{music?<Volume2 size={15}/>:<VolumeX size={15}/>}</button></nav>
+    <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
     <section className="poem-stage" id="poem">
       <div className="poem-ceiling"><i/><i/><i/><i/></div>
       <div className="poem-wall poem-wall-left"><span>COURAGE · GRACE · LIGHT · COURAGE · GRACE · LIGHT ·</span></div>
@@ -81,7 +80,7 @@ export default function App() {
       {allOpened&&<p className="all-opened"><Sparkles size={15}/> Tu as ouvert tous mes vœux. Il en reste un, écrit rien que pour toi.</p>}
     </section>
     <section className="letter-section" id="letter">
-      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><button className="pill-button" onClick={()=>setLetter(true)}>{letter?'Revoir la lettre':'Dérouler le papyrus'} <ArrowUpRight size={16}/></button></div>
+      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><button className="pill-button" onClick={()=>{setLetter(v=>!v);setSealed(false);}}>{letter?'Replier le papyrus':'Dérouler le papyrus'} <ArrowUpRight size={16}/></button></div>
       {letter&&<div className={`parchment-wrap is-writing ${typed?'is-written':''}`}><div className="parchment"><div className="paper-top-roll"/><div className="paper-content"><span className="paper-date">À TOI, JENNIFER · EN CE 3 NOVEMBRE</span><p className="handwriting">Ma chère Jennifer,</p><p className="letter-copy">{letterParagraphs[0].slice(0,visibleChars)}{!typed&&visibleChars<letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="letter-copy">{letterParagraphs[1].slice(0,Math.max(0,visibleChars-letterParagraphs[0].length))}{!typed&&visibleChars>=letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="handwriting signature">Ton frère, Kenneth.</p><div className={`wax-seal ${sealed?'pressed':''}`}><span>J</span><small>WITH LOVE</small></div></div><div className="paper-bottom-roll"/></div><button className="seal-button" onClick={()=>setSealed(true)} disabled={sealed||!typed}>{sealed?'LE SCEAU EST APPOSÉ':'APPOSER LE SCEAU'} <Sparkles size={14}/></button></div>}
     </section>
     <footer className="footer"><span className="eyebrow">END OF THIS LITTLE UNIVERSE</span><h2>Keep becoming,<br/><em>Jennifer.</em></h2><p>Le monde est plus beau avec toi dedans.</p><div className="footer-bottom"><span>MADE FOR JENNIFER · 23</span><button onClick={()=>{setEntered(false);setActive(null);setOpened([]);setLetter(false);setSealed(false);window.scrollTo({top:0,behavior:'smooth'});}}>REPLAY THE SURPRISE ↗</button><span>FROM YOUR BROTHER, WITH LOVE.</span></div></footer>
