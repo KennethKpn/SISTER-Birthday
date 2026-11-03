@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowUpRight, Heart, LockKeyhole, Mail, Music2, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
 
 const photos = [
   { src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&q=85', alt: 'Portrait éditorial', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
@@ -31,7 +31,6 @@ export default function App() {
   const [sealed,setSealed] = useState(false);
   const [typed,setTyped] = useState(false);
   const [music,setMusic] = useState(false);
-  const [showNote,setShowNote] = useState(false);
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   useEffect(()=>{ if(letter){setTyped(false);const t=window.setTimeout(()=>setTyped(true),2600);return()=>clearTimeout(t);} },[letter]);
