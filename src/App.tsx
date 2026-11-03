@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, Volume2, VolumeX, X } from 'lucide-react';
 
 const photos = [
-  { src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&q=85', alt: 'Portrait éditorial', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
-  { src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&q=85', alt: 'Portrait féminin', label: 'La douceur', note: 'Ta gentillesse est une force, jamais une faiblesse.' },
-  { src: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900&q=85', alt: 'Silhouette mode', label: 'L’audace', note: 'Continue d’oser les choses qui te ressemblent.' },
-  { src: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=900&q=85', alt: 'Portrait lumineux', label: 'La détermination', note: 'Tu avances à ta manière, et c’est aussi ce qui fait ta singularité.' },
-  { src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85', alt: 'Portrait mode', label: 'Le caractère', note: 'Un peu têtue, parfois redoutable… mais tellement attachante.' },
-  { src: 'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=900&q=85', alt: 'Portrait naturel', label: 'L’authenticité', note: 'Ne laisse jamais le monde éteindre ce qui te rend unique.' },
-  { src: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&q=85', alt: 'Portrait élégant', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
-  { src: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&q=85', alt: 'Portrait studio', label: 'Le renouveau', note: 'Que cette nouvelle année t’ouvre des portes inattendues.' },
+  { src: '/images/jennifer-01.webp', alt: 'Portrait éditorial', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
+  { src: '/images/jennifer-02.webp', alt: 'Portrait féminin', label: 'La douceur', note: 'Ta gentillesse est une force, jamais une faiblesse.' },
+  { src: '/images/jennifer-03.webp', alt: 'Silhouette mode', label: 'L’audace', note: 'Continue d’oser les choses qui te ressemblent.' },
+  { src: '/images/jennifer-04.webp', alt: 'Portrait lumineux', label: 'La détermination', note: 'Tu avances à ta manière, et c’est aussi ce qui fait ta singularité.' },
+  { src: '/images/jennifer-05.webp', alt: 'Portrait mode', label: 'Le caractère', note: 'Un peu têtue, parfois redoutable… mais tellement attachante.' },
+  { src: '/images/jennifer-06.webp', alt: 'Portrait naturel', label: 'L’authenticité', note: 'Ne laisse jamais le monde éteindre ce qui te rend unique.' },
+  { src: '/images/jennifer-07.webp', alt: 'Portrait élégant', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
+  { src: '/images/jennifer-01.webp', alt: 'Portrait studio', label: 'Le renouveau', note: 'Que cette nouvelle année t’ouvre des portes inattendues.' },
 ];
 
 const wishes = [
