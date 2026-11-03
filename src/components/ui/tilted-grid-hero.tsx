@@ -48,16 +48,23 @@ export function TiltedGridHero({
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      const next = measure(entry.contentRect.width, entry.contentRect.height, tileHeight, aspectRatio, gap, bend);
+    const update = (width: number, height: number) => {
+      const next = measure(width, height, tileHeight, aspectRatio, gap, bend);
       setLayout(prev => prev?.columns === next.columns && prev.sweep === next.sweep && prev.unit === next.unit ? prev : next);
-    });
+    };
+    if (typeof ResizeObserver === "undefined") {
+      const resize = () => update(el.clientWidth, el.clientHeight);
+      resize();
+      window.addEventListener("resize", resize);
+      return () => window.removeEventListener("resize", resize);
+    }
+    const observer = new ResizeObserver(([entry]) => update(entry.contentRect.width, entry.contentRect.height));
     observer.observe(el);
     return () => observer.disconnect();
   }, [tileHeight, aspectRatio, gap, bend]);
 
   React.useEffect(() => {
-    images.forEach(({ src }) => { const image = new Image(); image.src = src; });
+    images.forEach(({ src }) => { const image = new Image(); image.decoding = "async"; image.src = src; });
   }, [images]);
 
   const { columns, sweep, unit, limit } = layout ?? measure(1200, 420, tileHeight, aspectRatio, gap, bend);
@@ -65,13 +72,14 @@ export function TiltedGridHero({
   const radius = `${+(100 * arc(bend)).toFixed(3)}cqw`;
   const turn = (deg: number) => `translateZ(${radius}) rotateY(${+deg.toFixed(4)}deg) translateZ(-${radius})`;
   const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
-  const duration = columns * speed;
+  const safeSpeed = Number.isFinite(speed) ? Math.max(0.5, speed) : 4;
+  const duration = columns * safeSpeed;
   const share = aspectRatio / SLICES;
   const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${100 - fade}%,transparent)`;
   const css = `@keyframes ${orbit}{from{transform:${turn(-sweep)}}to{transform:${turn(sweep)}}0%,${hide}%,${100-hide}%,100%{visibility:hidden}${hide+0.001}%,${100-hide-0.001}%{visibility:visible}}@media(prefers-reduced-motion:reduce){.${tileClass}{animation-play-state:paused}}`;
 
   return (
-    <div ref={ref} className={`tilted-grid-hero relative isolate overflow-hidden ${className ?? ""}`} style={{ containerType: "size", ...style }} {...props}>
+    <div ref={ref} className={`tilted-grid-hero relative isolate overflow-hidden ${className ?? ""}`} style={{ ...style, containerType: "size" }} {...divProps}>
       <style>{css}</style>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 transition-opacity duration-500" style={{
         opacity: layout ? 1 : 0, perspective: `${+(100 * arc(bend) * CAMERA).toFixed(3)}cqw`,
@@ -79,12 +87,12 @@ export function TiltedGridHero({
       }}>
         {Array.from({ length: columns }, (_, t) => {
           const first = columns - 1 - t;
-          const img = images.length ? images[(shown[t] ?? first) % images.length] : undefined;
+          const img = images.length > 0 ? images[(shown[t] ?? first) % images.length] : undefined;
           return (
             <div key={t} className={`absolute ${tileClass}`} style={{
               left: `calc(50% - ${u(aspectRatio / 2)})`, top: `calc(${axis}% - ${u(.5)})`,
               width: u(aspectRatio), height: u(1), transformStyle: "preserve-3d",
-              animation: `${orbit} ${duration}s linear ${-t * speed}s infinite`
+              animation: `${orbit} ${duration}s linear ${-t * safeSpeed}s infinite`
             }} onAnimationIteration={event => {
               const lap = Math.round(event.elapsedTime / duration);
               setShown(prev => {
@@ -106,7 +114,7 @@ export function TiltedGridHero({
           );
         })}
       </div>
-      {props.children}
+      {children}
     </div>
   );
 }
