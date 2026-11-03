@@ -113,7 +113,7 @@ export function TiltedGridHero({
                   height: u(1), transform: turn((safeAspectRatio / 2 - (k + .5) * share) * unit)
                 }}>
                   {img && <img src={img.src} alt={k === 0 ? (img.alt ?? "") : ""} draggable={false}
-                    className="absolute top-0 max-w-none object-cover" style={{ left: u(-k * share), width: u(safeAspectRatio), height: u(1) }} />}
+                    className="absolute top-0 max-w-none object-cover" style={{ left: u((safeAspectRatio - share) / 2 - k * share), width: u(safeAspectRatio), height: u(1) }} />}
                 </div>
               ))}
             </div>
