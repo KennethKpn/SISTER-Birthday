@@ -19,3 +19,10 @@
 @media(prefers-reduced-motion:reduce){.poem-cube,.poem-wall span{animation:none}}
 
 .is-writing .letter-copy{opacity:1;transform:none}.signature{opacity:0;transform:translateY(8px);transition:all .8s .5s}.is-written .signature{opacity:1;transform:none}.parchment{transform-origin:top;animation:parchmentUnroll 1.65s cubic-bezier(.18,.76,.25,1) both}@keyframes parchmentUnroll{0%{clip-path:inset(0 0 100% 0);transform:scaleY(.12)}68%{clip-path:inset(0 0 0 0);transform:scaleY(1.015)}100%{clip-path:inset(0);transform:scaleY(1)}}
+
+/* Curved portrait stream replacing the old heart-shaped mosaic. */
+.portrait-stream{width:min(100%,1100px);height:clamp(300px,46vh,440px);margin:12px auto 0;position:relative;flex:none}
+.portrait-stream .tilted-grid-hero{height:100%;width:100%;overflow:hidden}
+.portrait-stream img{user-select:none;-webkit-user-drag:none}
+@media(max-width:760px){.portrait-stream{width:calc(100% + 28px);height:clamp(260px,43vh,360px);margin:24px -14px 0}}
+@media(prefers-reduced-motion:reduce){.portrait-stream .tilted-grid-hero *{animation-play-state:paused!important}}
