@@ -42,6 +42,22 @@ export default function App() {
   if(!entered) return <Balloons onLaunch={()=>setEntered(true)}/>;
   return <main className="site-shell">
     <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div><button className="sound-toggle" onClick={()=>setMusic(!music)} aria-label="Activer ou désactiver la musique">{music?<Volume2 size={15}/>:<VolumeX size={15}/>}</button></nav>
+    <section className="poem-stage" id="poem">
+      <div className="poem-ceiling"><i/><i/><i/><i/></div>
+      <div className="poem-wall poem-wall-left"><span>COURAGE · GRACE · LIGHT · COURAGE · GRACE · LIGHT ·</span></div>
+      <div className="poem-wall poem-wall-right"><span>YOU ARE BECOMING EVERYTHING YOU DREAMED OF</span></div>
+      <div className="poem-floor"/>
+      <div className="poem-stage-label"><span className="eyebrow">A POEM FOR CHAPTER 23</span><span className="eyebrow">SCENE 01 — THE BEGINNING</span></div>
+      <div className="poem-cube-wrap"><div className="poem-cube">
+        <div className="poem-face poem-front"><span>JENNIFER</span><em>keep becoming.</em></div>
+        <div className="poem-face poem-back"><p>May your courage<br/>always be louder<br/>than your doubts.</p></div>
+        <div className="poem-face poem-left"><p>May grace find you<br/>in every new<br/>beginning.</p></div>
+        <div className="poem-face poem-right"><p>May your dreams<br/>meet the work<br/>of your hands.</p></div>
+        <div className="poem-face poem-top"><span>CHAPTER XXIII</span></div>
+        <div className="poem-face poem-bottom"><span>MADE OF LIGHT</span></div>
+      </div></div>
+      <div className="poem-caption"><p>Tu n’as pas besoin de tout savoir aujourd’hui.<br/><em>Continue simplement d’avancer.</em></p><a href="#top">ENTER HER ARCHIVE <ArrowDown size={14}/></a></div>
+    </section>
     <section className="archive-hero" id="top">
       <div className="hero-overline"><span>CHAPTER 23</span><span>03 NOVEMBER 2003 — FOREVER</span></div>
       <div className="heart-mosaic" aria-label="Une mosaïque de portraits de Jennifer">{heartTiles}</div>
