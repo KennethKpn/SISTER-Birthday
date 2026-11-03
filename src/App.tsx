@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TiltedGridHero } from './components/ui/tilted-grid-hero';
 import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, X } from 'lucide-react';
 
 const photos = [
@@ -16,7 +17,8 @@ const letterParagraphs = [
   "Je ne te le dis peut-être pas assez souvent, mais je suis reconnaissant de t’avoir dans ma vie. Je vois ta force, ta gentillesse, ton courage et cette sensibilité que tu caches parfois derrière ton caractère bien trempé. Tu es ambitieuse, pleine de ressources, drôle à ta façon et profondément attachante. Oui, tu peux être têtue, me faire lever les yeux au ciel et parfois mettre ma patience à l’épreuve… mais ce sont aussi ces petites imperfections qui font que tu es toi. Je suis fier de la personne que tu deviens, et je souhaite que tu n’oublies jamais que tu peux compter sur moi.",
   "Pour tes 23 ans, je prie que Dieu accompagne chacun de tes pas. Qu’Il bénisse tes études, tes projets, tes entreprises et les rêves que tu n’as pas encore osé partager. Qu’Il t’accorde des relations saines, un amour sincère, une foi grandissante et une paix que rien ne pourra voler. Que ton travail ouvre des portes, que tes efforts deviennent des réussites et que l’abondance financière te donne les moyens de bâtir la vie que tu souhaites. Je te souhaite des éclats de rire, des voyages, des découvertes, de belles surprises et surtout la joie profonde de devenir pleinement la femme que tu es appelée à être."
 ];
-\nconst wishes = [
+
+const wishes = [
   { n: '01', title: 'Tes ambitions', text: 'Que tes études portent leurs fruits, que tes projets trouvent leur chemin et que chacune de tes entreprises rencontre les bonnes personnes, les bonnes occasions et le bon moment.' },
   { n: '02', title: 'Ton bonheur', text: 'Que tu sois entourée de relations sincères, respectueuses et réciproques. Que tu saches reconnaître l’amour qui t’élève et t’éloigner de ce qui t’éteint.' },
   { n: '03', title: 'Ta foi', text: 'Que Dieu guide tes pas, éclaire tes décisions et fortifie chaque jour ta relation avec Lui. Qu’Il t’accorde la paix intérieure, la sagesse et la patience.' },
@@ -37,7 +39,6 @@ export default function App() {
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;\n  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+4,totalLetterChars)),12); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);\n  useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
-  const heartTiles = useMemo(()=>photos.map((p,i)=><button key={p.label} className={`archive-tile tile-${i+1}`} onClick={()=>setActive(i)} aria-label={`Découvrir ${p.label}`}><img src={p.src} alt={p.alt}/><span>{p.label}</span></button>),[]);
   if(!entered) return <Balloons onLaunch={()=>setEntered(true)}/>;
   return <main className="site-shell">
     <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
@@ -59,7 +60,7 @@ export default function App() {
     </section>
     <section className="archive-hero" id="top">
       <div className="hero-overline"><span>CHAPTER 23</span><span>03 NOVEMBER 2003 — FOREVER</span></div>
-      <div className="heart-mosaic" aria-label="Une mosaïque de portraits de Jennifer">{heartTiles}</div>
+      <div className="portrait-stream"><TiltedGridHero images={photos.map(({src,alt})=>({src,alt}))} className="h-full w-full" speed={4.8} tileHeight={37} curve={78} axis={53} fade={9} /></div>
       <div className="hero-bottom"><h1><span>Everything</span><br/>that makes<br/><em>you, you.</em></h1><div className="hero-center-note">A life in little moments.<br/>A whole lot of reasons to celebrate.</div><p className="hero-right">23 YEARS<br/><strong>of becoming.</strong></p></div>
       <a className="scroll-cue" href="#archive"><span>DISCOVER HER STORY</span><ArrowDown size={15}/></a>
     </section>
