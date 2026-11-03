@@ -10,7 +10,6 @@ const photos = [
   { src: '/images/jennifer-05.webp', alt: 'Portrait mode', label: 'Le caractère', note: 'Un peu têtue, parfois redoutable… mais tellement attachante.' },
   { src: '/images/jennifer-06.webp', alt: 'Portrait naturel', label: 'L’authenticité', note: 'Ne laisse jamais le monde éteindre ce qui te rend unique.' },
   { src: '/images/jennifer-07.webp', alt: 'Portrait élégant', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
-  { src: '/images/jennifer-01.webp', alt: 'Portrait studio', label: 'Le renouveau', note: 'Que cette nouvelle année t’ouvre des portes inattendues.' },
 ];
 const heroImages = photos.map(({ src, alt }) => ({ src, alt }));
 
@@ -27,7 +26,7 @@ const wishes = [
 ];
 
 function Balloons({ onLaunch }: { onLaunch: () => void }) {
-  return <div className="intro-screen"><div className="intro-grain"/><div className="balloon-field" aria-hidden="true">{Array.from({length:18},(_,i)=><span key={i} className={`balloon balloon-${i%6}`} style={{left:`${(i*19+4)%100}%`,animationDelay:`${(i%7)*-.8}s`,animationDuration:`${10+(i%5)*2}s`}}/>)}</div><div className="intro-copy"><span className="eyebrow"><Sparkles size={13}/> A LITTLE SOMETHING FOR YOU</span><p className="intro-kicker">A new chapter begins</p><h1>Happy <em>23</em>,<br/>Jennifer<span>.</span></h1><p className="intro-sub">Une surprise imaginée avec amour,<br/>juste pour toi.</p><button className="pill-button light" onClick={onLaunch}>Ouvrir ma surprise <ArrowUpRight size={16}/></button><span className="intro-foot">03 · 11 · 2026 <i/> MADE WITH LOVE</span></div><div className="intro-side">SCROLL INTO YOUR DAY · 23 YEARS OF YOU</div></div>;
+  return <div className="intro-screen"><div className="intro-grain"/><div className="balloon-field" aria-hidden="true">{Array.from({length:18},(_,i)=><span key={i} className={`balloon balloon-${i%6}`} style={{left:`${(i*19+4)%100}%`,animationDelay:`${(i%7)*-.8}s`,animationDuration:`${10+(i%5)*2}s`}}/>)}</div><div className="intro-copy"><span className="eyebrow"><Sparkles size={13}/> A LITTLE SOMETHING FOR YOU</span><p className="intro-kicker">A new chapter begins</p><h1>Happy <em>23</em>,<br/>Jennifer<span>.</span></h1><p className="intro-sub">Une surprise imaginée avec amour,<br/>juste pour toi.</p><button type="button" className="pill-button light" onClick={onLaunch}>Ouvrir ma surprise <ArrowUpRight size={16}/></button><span className="intro-foot">03 · 11 · 2026 <i/> MADE WITH LOVE</span></div><div className="intro-side">SCROLL INTO YOUR DAY · 23 YEARS OF YOU</div></div>;
 }
 
 export default function App() {
@@ -41,11 +40,26 @@ export default function App() {
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;
-  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+4,totalLetterChars)),12); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);
+  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+2,totalLetterChars)),22); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);
   useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
+  useEffect(() => {
+    if (active === null) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+      if (event.key === "ArrowRight") setActive((current) => current === null ? 0 : (current + 1) % photos.length);
+      if (event.key === "ArrowLeft") setActive((current) => current === null ? photos.length - 1 : (current - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [active]);
   if(!entered) return <Balloons onLaunch={()=>setEntered(true)}/>;
   return <main className="site-shell">
-    <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
+    <nav className="top-nav" aria-label="Navigation principale"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
     <section className="poem-stage" id="poem">
       <div className="poem-ceiling"><i/><i/><i/><i/></div>
       <div className="poem-wall poem-wall-left"><span>COURAGE · GRACE · LIGHT · COURAGE · GRACE · LIGHT ·</span></div>
@@ -70,7 +84,7 @@ export default function App() {
     </section>
     <section className="archive-section" id="archive">
       <div className="section-heading"><span className="eyebrow">01 / THE ARCHIVE</span><p>Une collection de petits instants,<br/>et tout ce qu’ils racontent de toi.</p></div>
-      <div className="floating-gallery">{photos.map((p,i)=><button key={p.label} className={`gallery-photo photo-${i+1}`} onClick={()=>setActive(i)}><img src={p.src} alt={p.alt}/><span className="photo-caption">{p.label} <ArrowUpRight size={13}/></span></button>)}</div>
+      <div className="floating-gallery">{photos.map((p,i)=><button type="button" key={p.label} className={`gallery-photo photo-${i+1}`} onClick={()=>setActive(i)} aria-label={`Ouvrir le portrait : ${p.label}`}><img src={p.src} alt={p.alt} loading="lazy" decoding="async"/><span className="photo-caption">{p.label} <ArrowUpRight size={13}/></span></button>)}</div>
       <div className="archive-end"><span>NOT JUST A PRETTY PICTURE.</span><span>A THOUSAND LITTLE THINGS TO LOVE.</span></div>
     </section>
     <section className="manifesto">
@@ -85,10 +99,10 @@ export default function App() {
       {allOpened&&<p className="all-opened"><Sparkles size={15}/> Tu as ouvert tous mes vœux. Il en reste un, écrit rien que pour toi.</p>}
     </section>
     <section className="letter-section" id="letter">
-      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><button className="pill-button" onClick={()=>{setLetter(v=>!v);setSealed(false);}}>{letter?'Replier le papyrus':'Dérouler le papyrus'} <ArrowUpRight size={16}/></button></div>
+      <div className="letter-intro"><span className="eyebrow">03 / SEALED WITH LOVE</span><h2>Some things<br/>deserve <em>paper.</em></h2><p>Quand les mots du quotidien ne suffisent pas,<br/>il reste une lettre à ouvrir.</p><button type="button" className="pill-button" onClick={()=>{setLetter(v=>!v);setSealed(false);}}>{letter?'Replier le papyrus':'Dérouler le papyrus'} <ArrowUpRight size={16}/></button></div>
       {letter&&<div className={`parchment-wrap is-writing ${typed?'is-written':''}`}><div className="parchment"><div className="paper-top-roll"/><div className="paper-content"><span className="paper-date">À TOI, JENNIFER · EN CE 3 NOVEMBRE</span><p className="handwriting">Ma chère Jennifer,</p><p className="letter-copy">{letterParagraphs[0].slice(0,visibleChars)}{!typed&&visibleChars<letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="letter-copy">{letterParagraphs[1].slice(0,Math.max(0,visibleChars-letterParagraphs[0].length))}{!typed&&visibleChars>=letterParagraphs[0].length&&<span className="writing-cursor"/>}</p><p className="handwriting signature">Ton frère, Kenneth.</p><div className={`wax-seal ${sealed?'pressed':''}`}><span>J</span><small>WITH LOVE</small></div></div><div className="paper-bottom-roll"/></div><button className="seal-button" onClick={()=>setSealed(true)} disabled={sealed||!typed}>{sealed?'LE SCEAU EST APPOSÉ':'APPOSER LE SCEAU'} <Sparkles size={14}/></button></div>}
     </section>
     <footer className="footer"><span className="eyebrow">END OF THIS LITTLE UNIVERSE</span><h2>Keep becoming,<br/><em>Jennifer.</em></h2><p>Le monde est plus beau avec toi dedans.</p><div className="footer-bottom"><span>MADE FOR JENNIFER · 23</span><button onClick={()=>{setEntered(false);setActive(null);setOpened([]);setLetter(false);setSealed(false);window.scrollTo({top:0,behavior:'smooth'});}}>REPLAY THE SURPRISE ↗</button><span>FROM YOUR BROTHER, WITH LOVE.</span></div></footer>
-    {active!==null&&<div className="photo-modal" role="dialog" aria-modal="true" onClick={()=>setActive(null)}><button className="modal-close" onClick={()=>setActive(null)}><X/></button><div className="modal-image" onClick={e=>e.stopPropagation()}><img src={photos[active].src} alt={photos[active].alt}/><div><span className="eyebrow">A LITTLE REMINDER</span><h3>{photos[active].label}</h3><p>{photos[active].note}</p><button onClick={()=>setActive(((active??0)+1)%photos.length)}>NEXT PORTRAIT <ArrowUpRight size={14}/></button></div></div></div>}
+    {active!==null&&<div className="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title" tabIndex={-1} onClick={()=>setActive(null)}><button type="button" className="modal-close" aria-label="Fermer le portrait" onClick={()=>setActive(null)}><X/></button><div className="modal-image" onClick={e=>e.stopPropagation()}><img src={photos[active].src} alt={photos[active].alt} decoding="async"/><div><span className="eyebrow">A LITTLE REMINDER</span><h3 id="photo-modal-title">{photos[active].label}</h3><p>{photos[active].note}</p><button type="button" aria-label="Voir le portrait suivant" onClick={()=>setActive(((active??0)+1)%photos.length)}>NEXT PORTRAIT <ArrowUpRight size={14}/></button></div></div></div>}
   </main>;
 }
