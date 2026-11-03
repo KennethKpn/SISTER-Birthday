@@ -3,13 +3,13 @@ import { TiltedGridHero } from './components/ui/tilted-grid-hero';
 import { ArrowDown, ArrowUpRight, Heart, LockKeyhole, Sparkles, X } from 'lucide-react';
 
 const photos = [
-  { src: '/images/jennifer-01.webp', alt: 'Portrait éditorial', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
-  { src: '/images/jennifer-02.webp', alt: 'Portrait féminin', label: 'La douceur', note: 'Ta gentillesse est une force, jamais une faiblesse.' },
-  { src: '/images/jennifer-03.webp', alt: 'Silhouette mode', label: 'L’audace', note: 'Continue d’oser les choses qui te ressemblent.' },
-  { src: '/images/jennifer-04.webp', alt: 'Portrait lumineux', label: 'La détermination', note: 'Tu avances à ta manière, et c’est aussi ce qui fait ta singularité.' },
-  { src: '/images/jennifer-05.webp', alt: 'Portrait mode', label: 'Le caractère', note: 'Un peu têtue, parfois redoutable… mais tellement attachante.' },
-  { src: '/images/jennifer-06.webp', alt: 'Portrait naturel', label: 'L’authenticité', note: 'Ne laisse jamais le monde éteindre ce qui te rend unique.' },
-  { src: '/images/jennifer-07.webp', alt: 'Portrait élégant', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
+  { src: '/images/jennifer-01.webp', alt: 'Jennifer assise dans un escalier éclairé, en tenue claire', label: 'L’éclat', note: 'Cette lumière que tu portes sans même t’en rendre compte.' },
+  { src: '/images/jennifer-02.webp', alt: 'Jennifer posant sur un escalier intérieur', label: 'La douceur', note: 'Ta gentillesse est une force, jamais une faiblesse.' },
+  { src: '/images/jennifer-03.webp', alt: 'Jennifer en tailleur bleu clair dans un portrait de studio', label: 'L’audace', note: 'Continue d’oser les choses qui te ressemblent.' },
+  { src: '/images/jennifer-04.webp', alt: 'Portrait monochrome de Jennifer aux cheveux bouclés', label: 'La détermination', note: 'Tu avances à ta manière, et c’est aussi ce qui fait ta singularité.' },
+  { src: '/images/jennifer-05.webp', alt: 'Portrait rapproché en noir et blanc de Jennifer souriante', label: 'Le caractère', note: 'Un peu têtue, parfois redoutable… mais tellement attachante.' },
+  { src: '/images/jennifer-06.webp', alt: 'Jennifer portant une veste bleue et blanche devant un rideau métallique', label: 'L’authenticité', note: 'Ne laisse jamais le monde éteindre ce qui te rend unique.' },
+  { src: '/images/jennifer-07.webp', alt: 'Jennifer en tenue noire sur un fond doré', label: 'La grâce', note: 'Tu as le droit de prendre ta place et de briller.' },
 ];
 const heroImages = photos.map(({ src, alt }) => ({ src, alt }));
 
@@ -40,7 +40,11 @@ export default function App() {
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
   const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;
-  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+2,totalLetterChars)),22); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);
+  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(current=>{
+    const next=Math.min(current+2,totalLetterChars);
+    if(next>=totalLetterChars) window.clearInterval(timer);
+    return next;
+  }),22); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);
   useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
   useEffect(() => {
     if (active === null) return;
