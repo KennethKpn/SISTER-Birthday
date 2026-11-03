@@ -1,0 +1,1 @@
+Place the seven optimized portrait files here: jennifer-01.webp through jennifer-07.webp. Extract the companion jennifer-portrait-assets.zip archive at the repository root.
