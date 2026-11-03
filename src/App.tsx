@@ -38,7 +38,9 @@ export default function App() {
   const [typed,setTyped] = useState(false);\n  const [visibleChars,setVisibleChars] = useState(0);
   const reveal = (n:number) => setOpened(v=>v.includes(n)?v:[...v,n]);
   const allOpened = opened.length===wishes.length;
-  const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;\n  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+4,totalLetterChars)),12); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);\n  useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
+  const totalLetterChars = letterParagraphs[0].length + letterParagraphs[1].length;
+  useEffect(()=>{ if(!letter) return; setVisibleChars(0); setTyped(false); const timer=window.setInterval(()=>setVisibleChars(v=>Math.min(v+4,totalLetterChars)),12); return()=>window.clearInterval(timer); },[letter,totalLetterChars]);
+  useEffect(()=>{ if(visibleChars>=totalLetterChars && totalLetterChars>0) setTyped(true); },[visibleChars,totalLetterChars]);
   if(!entered) return <Balloons onLaunch={()=>setEntered(true)}/>;
   return <main className="site-shell">
     <nav className="top-nav"><a className="brand" href="#top"><span>✳</span> JENNIFER</a><div><a href="#archive">ARCHIVE</a><a href="#wishes">WISHES</a><a href="#letter">THE LETTER</a></div></nav>
